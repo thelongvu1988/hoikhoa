@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Quản Lý Hội Khóa 20 Năm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0B1529;
+      --bg-panel: #132238;
+      --gold: #d4a843;
+      --gold-light: #f5d77f;
+      --text-main: #e2e8f0;
+      --border: rgba(212, 168, 67, 0.3);
+      --danger: #ff4757;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-logo {
+      text-align: center;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .nav-item {
+      padding: 15px 20px;
+      color: var(--text-main);
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.3s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover, .nav-item.active {
+      background-color: rgba(212, 168, 67, 0.1);
+      border-left-color: var(--gold);
+      color: var(--gold-light);
+    }
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    h2 { color: var(--gold-light); margin-bottom: 20px; }
+    
+    /* Forms */
+    .admin-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .form-group { display: flex; flex-direction: column; }
+    label { font-size: 0.85rem; color: var(--gold); margin-bottom: 5px; font-weight: 600; }
+    input, select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3);
+      color: white;
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus { border-color: var(--gold); }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #c4962a);
+      color: var(--bg-main);
+    }
+    .btn-gold:hover { opacity: 0.9; }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    th {
+      color: var(--gold);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    td img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-logo">ADMIN HỘI KHÓA<br><span style="font-size:0.8rem;color:#ccc">Trường Cấp III Cư Jút</span></div>
+    <div class="nav-item active" onclick="switchTab('sponsors')">💰 Quản lý Nhà Tài Trợ</div>
+    <div class="nav-item" onclick="switchTab('reps')">📞 Quản lý Ban Liên Lạc</div>
+    <div class="nav-item" onclick="switchTab('orgs')">⚙️ Quản lý Ban Tổ Chức</div>
+  </div>
+
+  <div class="main-content">
+    
+    <div id="tab-sponsors" class="tab-content active">
+      <h2>Danh Sách Nhà Tài Trợ</h2>
+      
+      <div class="admin-card">
+        <form id="formSponsor">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tên nhà tài trợ</label>
+              <input type="text" id="spName" required placeholder="VD: Vũ Thế Long">
+            </div>
+            <div class="form-group">
+              <label>Số tiền đóng góp</label>
+              <input type="text" id="spAmount" required placeholder="VD: 5.000.000đ">
+            </div>
+            <div class="form-group">
+              <label>Ghi chú (Cựu HS lớp / Chức vụ)</label>
+              <input type="text" id="spNote" placeholder="VD: Cựu học sinh 12A1">
+            </div>
+            <div class="form-group">
+              <label>Đường dẫn ảnh đại diện (URL)</label>
+              <input type="text" id="spImg" placeholder="VD: pictures/long.jpg hoặc http...">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold">➕ Thêm Nhà Tài Trợ</button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Ảnh</th>
+              <th>Tên</th>
+              <th>Đóng góp</th>
+              <th>Ghi chú</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="tableSponsors"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-reps" class="tab-content">
+      <h2>Danh Sách Ban Liên Lạc (Đại Diện Lớp)</h2>
+      
+      <div class="admin-card">
+        <form id="formRep">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tên đại diện</label>
+              <input type="text" id="repName" required placeholder="VD: Nguyễn Văn A">
+            </div>
+            <div class="form-group">
+              <label>Lớp / Chức vụ</label>
+              <input type="text" id="repRole" required placeholder="VD: Đại Diện Lớp 12A1">
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="text" id="repPhone" placeholder="VD: 0987654321">
+            </div>
+            <div class="form-group">
+              <label>Link Zalo (SĐT Zalo)</label>
+              <input type="text" id="repZalo" placeholder="VD: 0987654321">
+            </div>
+            <div class="form-group">
+              <label>Đường dẫn ảnh đại diện (URL)</label>
+              <input type="text" id="repImg" placeholder="VD: pictures/a1.jpg">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold">➕ Thêm Đại Diện</button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Ảnh</th>
+              <th>Tên</th>
+              <th>Lớp</th>
+              <th>Liên hệ</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="tableReps"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-orgs" class="tab-content">
+      <h2>Danh Sách Ban Tổ Chức</h2>
+      
+      <div class="admin-card">
+        <form id="formOrg">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tên thành viên</label>
+              <input type="text" id="orgName" required placeholder="VD: Trần Thị B">
+            </div>
+            <div class="form-group">
+              <label>Vai trò trong BTC</label>
+              <input type="text" id="orgRole" required placeholder="VD: Trưởng Ban Tổ Chức">
+            </div>
+            <div class="form-group">
+              <label>Đường dẫn ảnh đại diện (URL)</label>
+              <input type="text" id="orgImg" placeholder="VD: pictures/btc1.jpg">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold">➕ Thêm Thành Viên BTC</button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Ảnh</th>
+              <th>Tên</th>
+              <th>Vai trò</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="tableOrgs"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Xử lý chuyển Tab
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // --- MÔ PHỎNG DATABASE BẰNG LOCALSTORAGE ---
+    let db = {
+      sponsors: JSON.parse(localStorage.getItem('sponsors')) || [],
+      reps: JSON.parse(localStorage.getItem('reps')) || [],
+      orgs: JSON.parse(localStorage.getItem('orgs')) || []
+    };
+
+    function saveData() {
+      localStorage.setItem('sponsors', JSON.stringify(db.sponsors));
+      localStorage.setItem('reps', JSON.stringify(db.reps));
+      localStorage.setItem('orgs', JSON.stringify(db.orgs));
+      renderAll();
+    }
+
+    // --- NHÀ TÀI TRỢ ---
+    document.getElementById('formSponsor').addEventListener('submit', function(e) {
+      e.preventDefault();
+      db.sponsors.push({
+        id: Date.now(),
+        name: document.getElementById('spName').value,
+        amount: document.getElementById('spAmount').value,
+        note: document.getElementById('spNote').value,
+        img: document.getElementById('spImg').value || 'https://via.placeholder.com/150/132238/d4a843?text=Avatar'
+      });
+      this.reset();
+      saveData();
+    });
+
+    // --- BAN LIÊN LẠC ---
+    document.getElementById('formRep').addEventListener('submit', function(e) {
+      e.preventDefault();
+      db.reps.push({
+        id: Date.now(),
+        name: document.getElementById('repName').value,
+        role: document.getElementById('repRole').value,
+        phone: document.getElementById('repPhone').value,
+        zalo: document.getElementById('repZalo').value,
+        img: document.getElementById('repImg').value || 'https://via.placeholder.com/150/132238/d4a843?text=Avatar'
+      });
+      this.reset();
+      saveData();
+    });
+
+    // --- BAN TỔ CHỨC ---
+    document.getElementById('formOrg').addEventListener('submit', function(e) {
+      e.preventDefault();
+      db.orgs.push({
+        id: Date.now(),
+        name: document.getElementById('orgName').value,
+        role: document.getElementById('orgRole').value,
+        img: document.getElementById('orgImg').value || 'https://via.placeholder.com/150/132238/d4a843?text=Avatar'
+      });
+      this.reset();
+      saveData();
+    });
+
+    // Xóa item dùng chung
+    function deleteItem(type, id) {
+      if(confirm('Bạn có chắc chắn muốn xóa?')) {
+        db[type] = db[type].filter(item => item.id !== id);
+        saveData();
+      }
+    }
+
+    // --- RENDER DỮ LIỆU RA BẢNG ---
+    function renderAll() {
+      // Bảng Nhà Tài Trợ
+      document.getElementById('tableSponsors').innerHTML = db.sponsors.map(item => `
+        <tr>
+          <td><img src="${item.img}" alt="avatar" onerror="this.src='https://via.placeholder.com/150/132238/d4a843?text=Lỗi'"></td>
+          <td style="font-weight:600; color:white">${item.name}</td>
+          <td style="color:var(--gold-light)">${item.amount}</td>
+          <td>${item.note}</td>
+          <td><button class="btn btn-danger" onclick="deleteItem('sponsors', ${item.id})">Xóa</button></td>
+        </tr>
+      `).join('');
+
+      // Bảng Ban Liên Lạc
+      document.getElementById('tableReps').innerHTML = db.reps.map(item => `
+        <tr>
+          <td><img src="${item.img}" alt="avatar" onerror="this.src='https://via.placeholder.com/150/132238/d4a843?text=Lỗi'"></td>
+          <td style="font-weight:600; color:white">${item.name}</td>
+          <td>${item.role}</td>
+          <td>
+            ${item.phone ? `📞 ${item.phone}<br>` : ''}
+            ${item.zalo ? `💬 Zalo: ${item.zalo}` : ''}
+          </td>
+          <td><button class="btn btn-danger" onclick="deleteItem('reps', ${item.id})">Xóa</button></td>
+        </tr>
+      `).join('');
+
+      // Bảng Ban Tổ Chức
+      document.getElementById('tableOrgs').innerHTML = db.orgs.map(item => `
+        <tr>
+          <td><img src="${item.img}" alt="avatar" onerror="this.src='https://via.placeholder.com/150/132238/d4a843?text=Lỗi'"></td>
+          <td style="font-weight:600; color:white">${item.name}</td>
+          <td>${item.role}</td>
+          <td><button class="btn btn-danger" onclick="deleteItem('orgs', ${item.id})">Xóa</button></td>
+        </tr>
+      `).join('');
+    }
+
+    // Gọi lần đầu khi load trang
+    renderAll();
+  </script>
+</body>
+</html>

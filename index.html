@@ -638,7 +638,7 @@
           formData.append('phone', document.getElementById('regPhone').value);          
           formData.append('note', document.getElementById('regNote').value);
 
-          // CẬP NHẬT ĐÚNG LINK SCRIPT MỚI NHẤT
+          // LINK SCRIPT MỚI NHẤT
           const scriptURL = 'https://script.google.com/macros/s/AKfycbxlTiZlPIIkvOvSzVFDoHvQykL0fjYHvktmezw0m3CGMMLVRtmybn7Y6oHi6tIUT0RyUg/exec';
 
           fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })            
@@ -775,7 +775,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
-      // CẬP NHẬT ĐÚNG LINK SCRIPT MỚI NHẤT
+      // LINK SCRIPT MỚI NHẤT
       const getURL = 'https://script.google.com/macros/s/AKfycbxlTiZlPIIkvOvSzVFDoHvQykL0fjYHvktmezw0m3CGMMLVRtmybn7Y6oHi6tIUT0RyUg/exec';
       
       // Hàm hiển thị dữ liệu lên giao diện
@@ -786,13 +786,13 @@
             return;
         }
 
-        // Xử lý dòng chữ chạy (Chỉ lấy Tên và Lớp)
-        const marqueeString = data.map(item => `🎉 Chào mừng bạn <strong>${item.name}</strong> (Lớp ${item.className}) đã đăng ký thành công!`).join('    ⭐    ');
+        // Xử lý dòng chữ chạy (Đảo ngược mảng để người mới nhất lên đầu)
+        const marqueeString = [...data].reverse().map(item => `🎉 Chào mừng bạn <strong>${item.name}</strong> (Lớp ${item.className}) đã đăng ký thành công!`).join('    ⭐    ');
         const marqueeEl = document.getElementById('tickerNames');
         marqueeEl.innerHTML = `<span>${marqueeString}</span>`;
         
-        // Điều chỉnh tốc độ chạy dựa trên số lượng người (Càng đông chạy càng chậm để kịp đọc)
-        const duration = Math.max(20, data.length * 4); 
+        // Điều chỉnh tốc độ chạy (Tăng thời gian lên để chạy chậm hơn, dễ đọc hơn)
+        const duration = Math.max(30, data.length * 8); 
         marqueeEl.style.animationDuration = duration + 's';
 
         // Xử lý thống kê (Đếm lớp đông nhất)
